@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix Rocknet Telecom - Provedor de Internet Fibra Óptica",
+  "description": "Internet 100% fibra óptica com ultravelocidade, suporte técnico especializado e contratação online rápida e segura pelo WhatsApp para Camilos e região.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
