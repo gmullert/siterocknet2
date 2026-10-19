@@ -1,16 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Plan, CoverageArea, SiteTool, FrontendContent } from './types';
 import {
   getStoredPlans,
+  saveStoredPlans,
   getStoredCoverage,
+  saveStoredCoverage,
   getStoredLeads,
+  saveStoredLeads,
   getStoredTools,
+  saveStoredTools,
   getStoredDueDates,
+  saveStoredDueDates,
   getStoredSettings,
+  saveStoredSettings,
   getStoredFrontendContent,
+  saveStoredFrontendContent,
+  getStoredAdminUsers,
+  saveStoredAdminUsers,
   isAdminAuthenticated,
   LeadOrder,
   SiteSettings,
+  ConsolidatedSiteData,
+  fetchServerSiteData,
+  saveServerSiteData,
   applyFavicon,
 } from './services/storage';
 
@@ -49,6 +61,12 @@ export default function App() {
   const [settings, setSettings] = useState<SiteSettings>(getStoredSettings());
   const [frontendContent, setFrontendContent] = useState<FrontendContent>(getStoredFrontendContent());
 
+  // Ref to hold latest state for syncServer
+  const stateRef = useRef({ plans, tools, coverage, leads, dueDates, settings, frontendContent });
+  useEffect(() => {
+    stateRef.current = { plans, tools, coverage, leads, dueDates, settings, frontendContent };
+  }, [plans, tools, coverage, leads, dueDates, settings, frontendContent]);
+
   // Modals state
   const [isContractOpen, setIsContractOpen] = useState(false);
   const [selectedPlanForContract, setSelectedPlanForContract] = useState<Plan | null>(null);
@@ -59,8 +77,9 @@ export default function App() {
   const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
   const [legalModalTab, setLegalModalTab] = useState<'privacy' | 'terms'>('privacy');
 
-  // Initialize data on mount
+  // Initialize data on mount: First from localStorage, then synchronize from server /api/site-data
   useEffect(() => {
+    // 1. Initial fast local load
     setPlans(getStoredPlans());
     setTools(getStoredTools());
     setCoverage(getStoredCoverage());
@@ -70,7 +89,74 @@ export default function App() {
     setSettings(initialSettings);
     applyFavicon(initialSettings.faviconUrl);
     setFrontendContent(getStoredFrontendContent());
+
+    // 2. Fetch authoritative state from server db.json
+    fetchServerSiteData().then((serverData) => {
+      if (serverData) {
+        if (Array.isArray(serverData.plans) && serverData.plans.length > 0) {
+          setPlans(serverData.plans);
+          saveStoredPlans(serverData.plans);
+        }
+        if (Array.isArray(serverData.coverage) && serverData.coverage.length > 0) {
+          setCoverage(serverData.coverage);
+          saveStoredCoverage(serverData.coverage);
+        }
+        if (Array.isArray(serverData.tools) && serverData.tools.length > 0) {
+          setTools(serverData.tools);
+          saveStoredTools(serverData.tools);
+        }
+        if (Array.isArray(serverData.leads)) {
+          setLeads(serverData.leads);
+          saveStoredLeads(serverData.leads);
+        }
+        if (Array.isArray(serverData.dueDates) && serverData.dueDates.length > 0) {
+          setDueDates(serverData.dueDates);
+          saveStoredDueDates(serverData.dueDates);
+        }
+        if (serverData.settings) {
+          setSettings(serverData.settings);
+          saveStoredSettings(serverData.settings);
+          applyFavicon(serverData.settings.faviconUrl);
+        }
+        if (serverData.frontendContent) {
+          setFrontendContent(serverData.frontendContent);
+          saveStoredFrontendContent(serverData.frontendContent);
+        }
+        if (serverData.adminUsers && Array.isArray(serverData.adminUsers) && serverData.adminUsers.length > 0) {
+          saveStoredAdminUsers(serverData.adminUsers);
+        }
+      } else {
+        // If server data file does not exist yet, push initial baseline data to create data/db.json
+        const initialPayload: ConsolidatedSiteData = {
+          plans: getStoredPlans(),
+          coverage: getStoredCoverage(),
+          tools: getStoredTools(),
+          settings: getStoredSettings(),
+          frontendContent: getStoredFrontendContent(),
+          leads: getStoredLeads(),
+          dueDates: getStoredDueDates(),
+          adminUsers: getStoredAdminUsers(),
+        };
+        saveServerSiteData(initialPayload);
+      }
+    });
   }, []);
+
+  // Helper to persist updates to server
+  const syncServer = (overrides?: Partial<ConsolidatedSiteData>) => {
+    const cur = stateRef.current;
+    const payload: ConsolidatedSiteData = {
+      plans: overrides?.plans ?? cur.plans,
+      coverage: overrides?.coverage ?? cur.coverage,
+      tools: overrides?.tools ?? cur.tools,
+      settings: overrides?.settings ?? cur.settings,
+      frontendContent: overrides?.frontendContent ?? cur.frontendContent,
+      leads: overrides?.leads ?? cur.leads,
+      dueDates: overrides?.dueDates ?? cur.dueDates,
+      adminUsers: overrides?.adminUsers ?? getStoredAdminUsers(),
+    };
+    saveServerSiteData(payload);
+  };
 
   // Sync favicon whenever settings change
   useEffect(() => {
@@ -149,6 +235,8 @@ export default function App() {
           coverageAreas={coverage}
           content={frontendContent.coverageSection}
           phoneRaw={settings.phoneRaw}
+          settings={settings}
+          city={settings.city}
         />
 
         {/* Technical Support Local */}
@@ -196,7 +284,11 @@ export default function App() {
             dueDates={dueDates}
             settings={settings}
             onClose={() => setIsContractOpen(false)}
-            onOrderCreated={() => setLeads(getStoredLeads())}
+            onOrderCreated={() => {
+              const currentLeads = getStoredLeads();
+              setLeads(currentLeads);
+              syncServer({ leads: currentLeads });
+            }}
             onOpenLegal={handleOpenLegal}
           />
         </React.Suspense>
@@ -232,19 +324,40 @@ export default function App() {
             isOpen={isAdminPanelOpen}
             onClose={() => setIsAdminPanelOpen(false)}
             plans={plans}
-            onUpdatePlans={(updated) => setPlans(updated)}
+            onUpdatePlans={(updated) => {
+              setPlans(updated);
+              syncServer({ plans: updated });
+            }}
             tools={tools}
-            onUpdateTools={(updated) => setTools(updated)}
+            onUpdateTools={(updated) => {
+              setTools(updated);
+              syncServer({ tools: updated });
+            }}
             dueDates={dueDates}
-            onUpdateDueDates={(updated) => setDueDates(updated)}
+            onUpdateDueDates={(updated) => {
+              setDueDates(updated);
+              syncServer({ dueDates: updated });
+            }}
             coverage={coverage}
-            onUpdateCoverage={(updated) => setCoverage(updated)}
+            onUpdateCoverage={(updated) => {
+              setCoverage(updated);
+              syncServer({ coverage: updated });
+            }}
             leads={leads}
-            onUpdateLeads={(updated) => setLeads(updated)}
+            onUpdateLeads={(updated) => {
+              setLeads(updated);
+              syncServer({ leads: updated });
+            }}
             settings={settings}
-            onUpdateSettings={(updated) => setSettings(updated)}
+            onUpdateSettings={(updated) => {
+              setSettings(updated);
+              syncServer({ settings: updated });
+            }}
             frontendContent={frontendContent}
-            onUpdateFrontendContent={(updated) => setFrontendContent(updated)}
+            onUpdateFrontendContent={(updated) => {
+              setFrontendContent(updated);
+              syncServer({ frontendContent: updated });
+            }}
           />
         </React.Suspense>
       )}

@@ -12,6 +12,9 @@ RUN npm install
 # Copia todo o código-fonte da aplicação
 COPY . .
 
+# Garante que as pastas de persistência de dados e uploads existam com permissões de escrita
+RUN mkdir -p data public && chmod -R 777 data public
+
 # Executa o build de produção dos arquivos estáticos
 RUN npm run build
 

@@ -1,0 +1,242 @@
+{
+  "plans": [
+    {
+      "id": "plano-300",
+      "name": "300 Mega",
+      "speed": 300,
+      "speedUnit": "MEGA",
+      "price": "70",
+      "cents": ",00",
+      "period": "/mês",
+      "category": "residencial",
+      "routerCount": 1,
+      "tag": "1 ROTEADOR INCLUSO",
+      "description": "Conexão ultraestável para navegação ágil, streaming Full HD/4K, redes sociais e estudos.",
+      "equipment": "1 Roteador Wi-Fi Gigabit incluso (Comodato gratuito)",
+      "idealFor": "1 a 4 pessoas conectadas simultaneamente",
+      "features": [
+        "300 Mega de Velocidade Real Simétrica",
+        "1 Roteador Wi-Fi Gigabit de Alta Performance",
+        "100% Fibra Óptica até o Roteador (FTTH)",
+        "Instalação Gratuita com Agendamento",
+        "Sem Franquia de Dados - Consumo Ilimitado",
+        "Suporte Técnico Humanizado e Local em Camilos"
+      ]
+    },
+    {
+      "id": "plano-400",
+      "name": "400 Mega",
+      "speed": 400,
+      "speedUnit": "MEGA",
+      "price": "100",
+      "cents": ",00",
+      "period": "/mês",
+      "featured": true,
+      "category": "residencial",
+      "routerCount": 2,
+      "tag": "2 ROTEADORES INCLUSOS",
+      "description": "O mais contratado em Camilos! Dois roteadores para cobrir toda a casa sem pontos cegos.",
+      "equipment": "2 Roteadores Wi-Fi inclusos (Super Cobertura em Toda a Casa)",
+      "idealFor": "Famílias com multitelas 4K, home office e games",
+      "features": [
+        "400 Mega de Velocidade Real Simétrica",
+        "2 Roteadores Wi-Fi inclusos (Zero Pontos Cegos)",
+        "100% Fibra Óptica até o Roteador (FTTH)",
+        "Instalação Gratuita com Agendamento",
+        "Sem Franquia de Dados - Consumo Ilimitado",
+        "Suporte Técnico Humanizado e Local em Camilos"
+      ]
+    },
+    {
+      "id": "plano-600",
+      "name": "600 Mega",
+      "speed": 600,
+      "speedUnit": "MEGA",
+      "price": "130",
+      "cents": ",00",
+      "period": "/mês",
+      "category": "residencial",
+      "routerCount": 2,
+      "tag": "ULTRAVELOCIDADE",
+      "description": "Máxima capacidade para múltiplos usuários simultâneos, downloads pesados e gamers exigentes.",
+      "equipment": "2 Roteadores Wi-Fi inclusos (Cobertura Estendida)",
+      "idealFor": "Usuários avançados, streamers e empresas locais",
+      "features": [
+        "600 Mega de Velocidade Real Simétrica",
+        "2 Roteadores Wi-Fi inclusos (Cobertura Estendida)",
+        "100% Fibra Óptica até o Roteador (FTTH)",
+        "Instalação Gratuita com Agendamento",
+        "Sem Franquia de Dados - Consumo Ilimitado",
+        "Suporte Técnico Humanizado e Local em Camilos"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "id": "cov-1",
+      "name": "Centro de Camilos",
+      "zone": "Urbana",
+      "status": "disponivel",
+      "statusLabel": "Fibra Ativa Imediata",
+      "installationTime": "Até 24h úteis",
+      "fiberType": "FTTH Gigabit",
+      "popularPlans": ["400 Mega", "600 Mega"]
+    },
+    {
+      "id": "cov-2",
+      "name": "Alto Bonito",
+      "zone": "Residencial",
+      "status": "disponivel",
+      "statusLabel": "Fibra Ativa Imediata",
+      "installationTime": "Até 24h úteis",
+      "fiberType": "FTTH Gigabit",
+      "popularPlans": ["300 Mega", "400 Mega"]
+    },
+    {
+      "id": "cov-3",
+      "name": "Vila Nova",
+      "zone": "Residencial",
+      "status": "disponivel",
+      "statusLabel": "Fibra Ativa Imediata",
+      "installationTime": "Até 24h úteis",
+      "fiberType": "FTTH Gigabit",
+      "popularPlans": ["400 Mega"]
+    },
+    {
+      "id": "cov-4",
+      "name": "São José",
+      "zone": "Expansão",
+      "status": "alta_demanda",
+      "statusLabel": "Instalação sob Consulta",
+      "installationTime": "24h a 48h",
+      "fiberType": "FTTH Gigabit",
+      "popularPlans": ["400 Mega", "600 Mega"]
+    },
+    {
+      "id": "cov-5",
+      "name": "Setor Industrial / Comercial",
+      "zone": "Comercial",
+      "status": "disponivel",
+      "statusLabel": "Planos Dedicados e FTTH",
+      "installationTime": "Até 24h úteis",
+      "fiberType": "FTTH / Link Dedicado",
+      "popularPlans": ["600 Mega"]
+    },
+    {
+      "id": "cov-6",
+      "name": "Regiões Vizinhas e Periferia",
+      "zone": "Rural / Expansão",
+      "status": "expansao",
+      "statusLabel": "Consulte Viabilidade",
+      "installationTime": "Agendamento prévio",
+      "fiberType": "Fibra / Cabo Óptico",
+      "popularPlans": ["300 Mega", "400 Mega"]
+    }
+  ],
+  "tools": [
+    {
+      "id": "tool-central",
+      "title": "Central do Assinante",
+      "description": "Acesse suas faturas, histórico de pagamento, extrato de conexão e alteração de dados cadastrais.",
+      "iconName": "user-check",
+      "category": "autoatendimento",
+      "badge": "Mais Acessado",
+      "actionType": "whatsapp",
+      "actionTarget": "Olá! Gostaria de acessar a minha Central do Assinante para consultar meus dados e faturas.",
+      "active": true
+    },
+    {
+      "id": "tool-2via",
+      "title": "2ª Via de Fatura & PIX",
+      "description": "Gere a segunda via do seu boleto ou obtenha a chave PIX copia-e-cola com baixa instantânea.",
+      "iconName": "receipt",
+      "category": "financeiro",
+      "badge": "Baixa na Hora",
+      "actionType": "whatsapp",
+      "actionTarget": "Olá! Preciso da 2ª via da minha fatura / código PIX da Rocknet para pagamento imediato.",
+      "active": true
+    },
+    {
+      "id": "tool-suporte",
+      "title": "Suporte Técnico Humanizado",
+      "description": "Atendimento rápido diretamente pelo WhatsApp com equipe técnica local pronta para resolver qualquer oscilação.",
+      "iconName": "life-buoy",
+      "category": "suporte",
+      "badge": "Até às 21h",
+      "actionType": "whatsapp",
+      "actionTarget": "Olá equipe técnica Rocknet! Preciso de um atendimento para a minha conexão.",
+      "active": true
+    },
+    {
+      "id": "tool-upgrade",
+      "title": "Upgrade de Velocidade",
+      "description": "Aumente a velocidade do seu plano ou adicione mais roteadores Wi-Fi para cobrir novas áreas da sua residência.",
+      "iconName": "zap",
+      "category": "comercial",
+      "badge": "Sem Custo de Troca",
+      "actionType": "whatsapp",
+      "actionTarget": "Olá! Gostaria de fazer um upgrade de velocidade no meu plano de fibra óptica da Rocknet.",
+      "active": true
+    },
+    {
+      "id": "tool-mudanca",
+      "title": "Mudança de Endereço",
+      "description": "Vai se mudar dentro de Camilos? Solicite a transferência ágil do ponto de fibra óptica para a nova residência.",
+      "iconName": "map-pin",
+      "category": "servico",
+      "badge": "Agendado",
+      "actionType": "whatsapp",
+      "actionTarget": "Olá! Vou mudar de endereço e gostaria de transferir a instalação da minha fibra óptica.",
+      "active": true
+    },
+    {
+      "id": "tool-desbloqueio",
+      "title": "Desbloqueio em Confiança",
+      "description": "Teve algum imprevisto no pagamento? Solicite a liberação temporária da sua conexão de forma imediata.",
+      "iconName": "shield-alert",
+      "category": "financeiro",
+      "badge": "Instantâneo",
+      "actionType": "whatsapp",
+      "actionTarget": "Olá! Gostaria de solicitar o desbloqueio em confiança da minha conexão Rocknet.",
+      "active": true
+    }
+  ],
+  "settings": {
+    "name": "Rocknet Telecom",
+    "tagline": "Internet Fibra Óptica de Alta Performance",
+    "phoneDisplay": "(88) 99267-5749",
+    "phoneRaw": "5588992675749",
+    "instagramUrl": "https://www.instagram.com/rocknet_camilos",
+    "instagramHandle": "@rocknet_camilos",
+    "city": "Camilos",
+    "workHours": "Segunda a Sábado das 07:30 às 18:00",
+    "supportHours": "Plantão Técnico até as 21:00",
+    "logoUrl": "",
+    "logoHeight": 38,
+    "logoMode": "image",
+    "logoTextPrimary": "Rock",
+    "logoTextAccent": "net",
+    "faviconUrl": "/favicon.svg"
+  },
+  "dueDates": ["05", "10", "15", "20", "25"],
+  "leads": [
+    {
+      "id": "lead-1",
+      "protocol": "#RCK-9267-8821",
+      "date": "Hoje, 08:45",
+      "timestamp": 1776580000000,
+      "planName": "400 Mega (2 Roteadores)",
+      "planPrice": "R$ 100,00/mês",
+      "fullName": "Francisco José de Sousa",
+      "phone": "88998412345",
+      "cpf": "123.456.789-00",
+      "street": "Rua Principal",
+      "number": "142",
+      "neighborhood": "Centro de Camilos",
+      "reference": "Próximo à padaria central",
+      "preferredPeriod": "manha",
+      "dueDate": "10",
+      "status": "novo"
+    }
+  ]
+}

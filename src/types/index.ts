@@ -142,7 +142,7 @@ export interface FrontendContent {
     card4Title: string;
     card4Desc: string;
     imageUrl?: string;
-    ctaButtonText: string;
+    ctaButtonText?: string;
   };
   instagramSection: {
     badge: string;

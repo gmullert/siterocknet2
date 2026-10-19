@@ -282,9 +282,9 @@ _Gostaria de confirmar o agendamento da instalação pelo site da ${providerName
 
               <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-neutral-300 space-y-1">
                 <p className="font-semibold text-white">Benefícios inclusos no pedido:</p>
-                <p>✓ Roteador em comodato grátis instalado pela equipe Rocknet</p>
+                <p>✓ Roteador em comodato grátis instalado pela equipe {providerName}</p>
                 <p>✓ Conexão 100% fibra óptica sem franquia de consumo</p>
-                <p>✓ Suporte local em Camilos pelo WhatsApp oficial</p>
+                <p>✓ Suporte local em {city} pelo WhatsApp oficial</p>
               </div>
 
               <div className="pt-4 flex justify-end">
@@ -401,7 +401,7 @@ _Gostaria de confirmar o agendamento da instalação pelo site da ${providerName
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-sm text-cyan-400 font-semibold mb-2">
                 <MapPin className="w-4 h-4" />
-                <span>Endereço de Instalação em Camilos</span>
+                <span>Endereço de Instalação em {city}</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -640,7 +640,7 @@ _Gostaria de confirmar o agendamento da instalação pelo site da ${providerName
                   Pedido Registrado com Sucesso!
                 </span>
                 <h3 className="text-2xl font-black text-white font-display">
-                  Bem-vindo à Rocknet Fibra Óptica
+                  Bem-vindo à {providerName} Fibra Óptica
                 </h3>
                 <p className="text-xs text-neutral-400 max-w-md mx-auto mt-2">
                   Seu cadastro foi salvo em nosso sistema e a mensagem pré-formatada foi aberta no seu WhatsApp oficial.
@@ -665,13 +665,13 @@ _Gostaria de confirmar o agendamento da instalação pelo site da ${providerName
               {/* Action buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                 <a
-                  href={`https://wa.me/${ROCKNET_INFO.phoneRaw}`}
+                  href={`https://wa.me/${phoneRaw}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full sm:w-auto px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2"
                 >
                   <Send className="w-4 h-4" />
-                  <span>Abrir WhatsApp ({ROCKNET_INFO.phoneDisplay})</span>
+                  <span>Abrir WhatsApp ({phoneDisplay})</span>
                 </a>
                 
                 <button

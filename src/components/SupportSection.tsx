@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { ROCKNET_INFO } from '../data/content';
-import { SiteSettings, getStoredFrontendContent, saveStoredFrontendContent } from '../services/storage';
-import { getMediaAsset, saveMediaAsset } from '../services/imageStorage';
+import React, { useState, useEffect } from 'react';
+import { SiteSettings } from '../services/storage';
+import { getMediaAsset } from '../services/imageStorage';
 import { FrontendContent } from '../types';
-import { Headphones, PhoneCall, Clock, FileText, Wifi } from 'lucide-react';
+import { Headphones, Clock, FileText, Wifi } from 'lucide-react';
 import techImg from '../assets/images/tecnico_rocknet_1791767860363.png';
 
 interface SupportSectionProps {
@@ -12,9 +11,6 @@ interface SupportSectionProps {
 }
 
 export const SupportSection: React.FC<SupportSectionProps> = ({ content, settings }) => {
-  const phoneDisplay = settings?.phoneDisplay || ROCKNET_INFO.phoneDisplay;
-  const phoneRaw = settings?.phoneRaw || ROCKNET_INFO.phoneRaw;
-
   const badgeText = content?.badge || 'Suporte Técnico Humanizado em Camilos';
   const titleText = content?.title || 'Atendimento direto com quem entende e resolve o seu problema.';
   const subtitleText = content?.subtitle || 'Chega de esperar horas em linhas automáticas ou falar com robôs confusos. Na Rocknet você tem canal direto com nossa equipe técnica local pelo WhatsApp.';
@@ -28,7 +24,6 @@ export const SupportSection: React.FC<SupportSectionProps> = ({ content, setting
   const card3Desc = content?.card3Desc || 'Nossos switches e concentradores ópticos são monitorados 24 horas para prevenir falhas.';
   const card4Title = content?.card4Title || '2ª Via & Financeiro Rápido';
   const card4Desc = content?.card4Desc || 'Receba sua fatura ou chave PIX instantaneamente no WhatsApp sem burocracia.';
-  const ctaBtnText = content?.ctaButtonText || 'Chamar Técnico no WhatsApp';
 
   // Support exact uploaded image maintaining natural proportions and current background
   const initialImg = () => {
@@ -100,14 +95,6 @@ export const SupportSection: React.FC<SupportSectionProps> = ({ content, setting
     }
   }, [content?.imageUrl]);
 
-  const handleOpenWhatsAppSupport = (subject?: string) => {
-    const text = subject
-      ? `Olá, suporte Rocknet! Preciso de ajuda com: ${subject}.`
-      : 'Olá equipe de suporte da Rocknet! Preciso de atendimento para minha conexão em Camilos.';
-    const url = `https://wa.me/${phoneRaw}?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
   return (
     <section id="suporte" className="py-12 sm:py-16 md:py-20 bg-neutral-950 border-b border-neutral-900 scroll-mt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -126,75 +113,64 @@ export const SupportSection: React.FC<SupportSectionProps> = ({ content, setting
         </div>
 
         {/* Support Grid: Left features & Contact / Right image */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
-          <div className="lg:col-span-7 space-y-6">
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-5 rounded-2xl bg-neutral-900/80 border border-neutral-800">
-                <div className="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-3">
-                  <Headphones className="w-5 h-5" />
+          <div className="lg:col-span-7">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+              <div className="p-6 rounded-2xl bg-neutral-900/80 border border-neutral-800 hover:border-neutral-700/80 transition-all flex flex-col justify-between shadow-sm">
+                <div>
+                  <div className="w-11 h-11 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-3.5">
+                    <Headphones className="w-5 h-5" />
+                  </div>
+                  <h4 className="font-bold text-white text-base">{card1Title}</h4>
+                  <p className="text-xs text-neutral-400 mt-1.5 leading-relaxed">
+                    {card1Desc}
+                  </p>
                 </div>
-                <h4 className="font-bold text-white text-base">{card1Title}</h4>
-                <p className="text-xs text-neutral-400 mt-1">
-                  {card1Desc}
-                </p>
               </div>
 
-              <div className="p-5 rounded-2xl bg-neutral-900/80 border border-neutral-800">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-3">
-                  <Clock className="w-5 h-5" />
+              <div className="p-6 rounded-2xl bg-neutral-900/80 border border-neutral-800 hover:border-neutral-700/80 transition-all flex flex-col justify-between shadow-sm">
+                <div>
+                  <div className="w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-3.5">
+                    <Clock className="w-5 h-5" />
+                  </div>
+                  <h4 className="font-bold text-white text-base">{card2Title}</h4>
+                  <p className="text-xs text-neutral-400 mt-1.5 leading-relaxed">
+                    {card2Desc}
+                  </p>
                 </div>
-                <h4 className="font-bold text-white text-base">{card2Title}</h4>
-                <p className="text-xs text-neutral-400 mt-1">
-                  {card2Desc}
-                </p>
                 {settings?.supportHours && (
-                  <div className="mt-2.5 pt-2 border-t border-neutral-800/80 flex items-center gap-1.5 text-[11px] text-emerald-400 font-semibold">
+                  <div className="mt-3 pt-2.5 border-t border-neutral-800/80 flex items-center gap-1.5 text-[11px] text-emerald-400 font-semibold">
                     <Clock className="w-3.5 h-3.5" />
                     <span>Plantão Estendido: {settings.supportHours}</span>
                   </div>
                 )}
               </div>
 
-              <div className="p-5 rounded-2xl bg-neutral-900/80 border border-neutral-800">
-                <div className="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-3">
-                  <Wifi className="w-5 h-5" />
+              <div className="p-6 rounded-2xl bg-neutral-900/80 border border-neutral-800 hover:border-neutral-700/80 transition-all flex flex-col justify-between shadow-sm">
+                <div>
+                  <div className="w-11 h-11 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-3.5">
+                    <Wifi className="w-5 h-5" />
+                  </div>
+                  <h4 className="font-bold text-white text-base">{card3Title}</h4>
+                  <p className="text-xs text-neutral-400 mt-1.5 leading-relaxed">
+                    {card3Desc}
+                  </p>
                 </div>
-                <h4 className="font-bold text-white text-base">{card3Title}</h4>
-                <p className="text-xs text-neutral-400 mt-1">
-                  {card3Desc}
-                </p>
               </div>
 
-              <div className="p-5 rounded-2xl bg-neutral-900/80 border border-neutral-800">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-3">
-                  <FileText className="w-5 h-5" />
+              <div className="p-6 rounded-2xl bg-neutral-900/80 border border-neutral-800 hover:border-neutral-700/80 transition-all flex flex-col justify-between shadow-sm">
+                <div>
+                  <div className="w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-3.5">
+                    <FileText className="w-5 h-5" />
+                  </div>
+                  <h4 className="font-bold text-white text-base">{card4Title}</h4>
+                  <p className="text-xs text-neutral-400 mt-1.5 leading-relaxed">
+                    {card4Desc}
+                  </p>
                 </div>
-                <h4 className="font-bold text-white text-base">{card4Title}</h4>
-                <p className="text-xs text-neutral-400 mt-1">
-                  {card4Desc}
-                </p>
               </div>
             </div>
-
-            {/* Direct WhatsApp Call to Action Bar */}
-            <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-950/60 to-neutral-900 border border-emerald-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div>
-                <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider block">
-                  Canal de Suporte WhatsApp
-                </span>
-                <p className="text-lg font-bold text-white font-mono">{phoneDisplay}</p>
-              </div>
-              <button
-                onClick={() => handleOpenWhatsAppSupport()}
-                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-emerald-500/20 active:scale-95 transition-all"
-              >
-                <PhoneCall className="w-4 h-4" />
-                <span>{ctaBtnText}</span>
-              </button>
-            </div>
-
           </div>
 
           {/* Right Column: Mascote Técnico Rocknet - Exibição no Site (Gerenciado Exclusivamente pelo Dashboard) */}

@@ -1,12 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import { CoverageArea, FrontendContent } from '../types';
 import { ROCKNET_INFO } from '../data/content';
+import { SiteSettings } from '../services/storage';
 import { MapPin, CheckCircle, Clock, Send, ArrowUpRight, X } from 'lucide-react';
 
 interface CoverageSectionProps {
   coverageAreas: CoverageArea[];
   content?: FrontendContent['coverageSection'];
   phoneRaw?: string;
+  settings?: SiteSettings;
+  city?: string;
 }
 
 const normalize = (str: string) =>
@@ -20,16 +23,20 @@ export const CoverageSection: React.FC<CoverageSectionProps> = ({
   coverageAreas,
   content,
   phoneRaw,
+  settings,
+  city: cityProp,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedArea, setSelectedArea] = useState<CoverageArea | null>(null);
 
-  const rawPhone = phoneRaw || ROCKNET_INFO.phoneRaw;
+  const rawPhone = phoneRaw || settings?.phoneRaw || ROCKNET_INFO.phoneRaw;
+  const city = cityProp || settings?.city || ROCKNET_INFO.city || 'Camilos';
+  const providerName = settings?.name || ROCKNET_INFO.name || 'Rocknet';
 
-  const badgeText = content?.badge || 'Área de Cobertura Rocknet';
-  const titleText = content?.title || 'Fibra óptica de alta densidade em Camilos e região.';
+  const badgeText = content?.badge || `Área de Cobertura ${providerName}`;
+  const titleText = content?.title || `Fibra óptica de alta densidade em ${city} e região.`;
   const subtitleText = content?.subtitle || 'Estamos em constante expansão com anéis ópticos redundantes. Consulte a viabilidade imediata para a sua rua ou bairro.';
-  const placeholderText = content?.searchPlaceholder || 'Digite o nome da sua rua, número ou bairro em Camilos...';
+  const placeholderText = content?.searchPlaceholder || `Digite o nome da sua rua, número ou bairro em ${city}...`;
   const ctaBtnText = content?.ctaButtonText || 'Consultar Viabilidade no WhatsApp';
 
   // Real-time filter across name, zone, fiber type, and status
@@ -53,8 +60,8 @@ export const CoverageSection: React.FC<CoverageSectionProps> = ({
   }, [coverageAreas, searchTerm]);
 
   const handleConsultWhatsApp = (addressName?: string) => {
-    const addressToQuery = addressName || searchTerm.trim() || 'meu endereço em Camilos';
-    const text = `Olá, equipe Rocknet! Gostaria de consultar a disponibilidade de fibra óptica para instalação no endereço: ${addressToQuery}. Podem verificar a caixa óptica mais próxima para mim?`;
+    const addressToQuery = addressName || searchTerm.trim() || `meu endereço em ${city}`;
+    const text = `Olá, equipe ${providerName}! Gostaria de consultar a disponibilidade de fibra óptica para instalação no endereço: ${addressToQuery}. Podem verificar a caixa óptica mais próxima para mim?`;
     const url = `https://wa.me/${rawPhone}?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
@@ -251,7 +258,7 @@ export const CoverageSection: React.FC<CoverageSectionProps> = ({
             <div>
               <h4 className="text-base font-bold text-white">Nenhum bairro pré-cadastrado como "{searchTerm}"</h4>
               <p className="text-xs text-neutral-400 mt-1">
-                A Rocknet está presente em diversas ruas e setores de Camilos. Envie sua localização ou endereço para checarmos a viabilidade da caixa óptica agora mesmo!
+                A {providerName} está presente em diversas ruas e setores de {city}. Envie sua localização ou endereço para checarmos a viabilidade da caixa óptica agora mesmo!
               </p>
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">

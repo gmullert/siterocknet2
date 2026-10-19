@@ -40,6 +40,72 @@ export interface SiteSettings {
   faviconUrl?: string; // base64 data URL, server path, or external URL
 }
 
+export interface ConsolidatedSiteData {
+  plans?: Plan[];
+  coverage?: CoverageArea[];
+  tools?: SiteTool[];
+  settings?: SiteSettings;
+  frontendContent?: FrontendContent;
+  leads?: LeadOrder[];
+  dueDates?: string[];
+  adminUsers?: AdminUser[];
+}
+
+export const fetchServerSiteData = async (): Promise<ConsolidatedSiteData | null> => {
+  try {
+    const res = await fetch('/api/site-data');
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success && json.data) {
+        return json.data;
+      }
+    }
+  } catch (err) {
+    console.warn('Could not read site data from server:', err);
+  }
+  return null;
+};
+
+export const saveServerSiteData = async (payload: ConsolidatedSiteData): Promise<boolean> => {
+  try {
+    const res = await fetch('/api/site-data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) {
+      const json = await res.json();
+      return !!json.success;
+    }
+  } catch (err) {
+    console.warn('Could not persist site data to server:', err);
+  }
+  return false;
+};
+
+let serverSyncDebounce: any = null;
+export const triggerServerSync = () => {
+  if (typeof window === 'undefined') return;
+  if (serverSyncDebounce) clearTimeout(serverSyncDebounce);
+  serverSyncDebounce = setTimeout(() => {
+    try {
+      const payload: ConsolidatedSiteData = {
+        plans: getStoredPlans(),
+        coverage: getStoredCoverage(),
+        tools: getStoredTools(),
+        settings: getStoredSettings(),
+        frontendContent: getStoredFrontendContent(),
+        leads: getStoredLeads(),
+        dueDates: getStoredDueDates(),
+        adminUsers: getStoredAdminUsers(),
+      };
+      saveServerSiteData(payload);
+    } catch (e) {
+      console.warn('Auto-sync to server error:', e);
+    }
+  }, 250);
+};
+
 export const applyFavicon = (faviconUrl?: string) => {
   if (typeof document === 'undefined') return;
   const href = faviconUrl && faviconUrl.trim() ? faviconUrl.trim() : '/favicon.svg';
@@ -140,6 +206,7 @@ export const saveStoredPlans = (plans: Plan[]) => {
   } catch (err) {
     console.warn('Error saving plans:', err);
   }
+  triggerServerSync();
 };
 
 export const getStoredTools = (): SiteTool[] => {
@@ -161,6 +228,7 @@ export const saveStoredTools = (tools: SiteTool[]) => {
   } catch (err) {
     console.warn('Error saving tools:', err);
   }
+  triggerServerSync();
 };
 
 export const getStoredDueDates = (): string[] => {
@@ -181,6 +249,7 @@ export const saveStoredDueDates = (dates: string[]) => {
   } catch (err) {
     console.warn('Error saving due dates:', err);
   }
+  triggerServerSync();
 };
 
 export const getStoredCoverage = (): CoverageArea[] => {
@@ -199,6 +268,7 @@ export const saveStoredCoverage = (areas: CoverageArea[]) => {
   } catch (err) {
     console.warn('Error saving coverage:', err);
   }
+  triggerServerSync();
 };
 
 export const getStoredLeads = (): LeadOrder[] => {
@@ -217,6 +287,7 @@ export const saveStoredLeads = (leads: LeadOrder[]) => {
   } catch (err) {
     console.warn('Error saving leads:', err);
   }
+  triggerServerSync();
 };
 
 export const addLeadOrder = (formData: ContractFormData): LeadOrder => {
@@ -283,6 +354,7 @@ export const saveStoredSettings = (settings: SiteSettings) => {
   } catch (err) {
     console.warn('Error saving settings to localStorage:', err);
   }
+  triggerServerSync();
 };
 
 export const getStoredFrontendContent = (): FrontendContent => {
@@ -337,6 +409,7 @@ export const saveStoredFrontendContent = (content: FrontendContent) => {
   } catch (err) {
     console.warn('Error saving frontend content to localStorage (quota or disabled):', err);
   }
+  triggerServerSync();
 };
 
 export const isAdminAuthenticated = (): boolean => {
@@ -399,7 +472,12 @@ export const getStoredAdminUsers = (): AdminUser[] => {
 };
 
 export const saveStoredAdminUsers = (users: AdminUser[]) => {
-  localStorage.setItem(STORAGE_KEYS.ADMIN_USERS, JSON.stringify(users));
+  try {
+    localStorage.setItem(STORAGE_KEYS.ADMIN_USERS, JSON.stringify(users));
+  } catch (err) {
+    console.warn('Error saving admin users:', err);
+  }
+  triggerServerSync();
 };
 
 export const getCurrentAdminUser = (): AdminUser => {

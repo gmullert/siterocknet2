@@ -22,6 +22,9 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ settings }) 
   const [isOpen, setIsOpen] = useState(false);
   const [customMsg, setCustomMsg] = useState('');
 
+  const providerName = settings?.name || 'Rocknet';
+  const city = settings?.city || 'Camilos';
+
   const sendWhatsApp = (text: string) => {
     const encoded = encodeURIComponent(text);
     const url = `https://wa.me/${settings.phoneRaw}?text=${encoded}`;
@@ -32,15 +35,15 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ settings }) 
   const quickMessages = [
     {
       title: 'Quero assinar fibra óptica',
-      text: 'Olá! Estou no site da Rocknet e gostaria de saber mais sobre a instalação dos planos de fibra óptica.',
+      text: `Olá! Estou no site da ${providerName} e gostaria de saber mais sobre a instalação dos planos de fibra óptica.`,
     },
     {
       title: 'Verificar cobertura na minha rua',
-      text: 'Olá! Gostaria de consultar se a fibra óptica da Rocknet já está disponível no meu endereço em Camilos.',
+      text: `Olá! Gostaria de consultar se a fibra óptica da ${providerName} já está disponível no meu endereço em ${city}.`,
     },
     {
       title: 'Suporte Técnico Humanizado',
-      text: 'Olá equipe Rocknet! Preciso de um auxílio técnico com a minha conexão de internet.',
+      text: `Olá equipe ${providerName}! Preciso de um auxílio técnico com a minha conexão de internet.`,
     },
     {
       title: '2ª Via de Boleto / Chave PIX',
@@ -82,8 +85,8 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ settings }) 
           {/* Body message preview */}
           <div className="p-4 bg-neutral-950/60 max-h-80 overflow-y-auto space-y-3 text-xs">
             <div className="bg-neutral-800/90 text-neutral-200 p-3 rounded-2xl rounded-tl-sm border border-neutral-700/50 shadow-sm leading-relaxed">
-              <p className="font-medium text-white mb-1">Olá! Bem-vindo à Rocknet Fibra Óptica 👋</p>
-              <p>Como nossa equipe de Camilos pode te ajudar hoje? Escolha um assunto rápido ou digite sua mensagem:</p>
+              <p className="font-medium text-white mb-1">Olá! Bem-vindo à {providerName} Fibra Óptica 👋</p>
+              <p>Como nossa equipe de {city} pode te ajudar hoje? Escolha um assunto rápido ou digite sua mensagem:</p>
             </div>
 
             {/* Quick choices */}
@@ -123,7 +126,7 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ settings }) 
                 if (customMsg.trim()) {
                   sendWhatsApp(customMsg);
                 } else {
-                  sendWhatsApp('Olá! Vim pelo site da Rocknet e gostaria de tirar uma dúvida.');
+                  sendWhatsApp(`Olá! Vim pelo site da ${providerName} e gostaria de tirar uma dúvida.`);
                 }
               }}
               className="bg-emerald-600 hover:bg-emerald-500 text-white p-2.5 rounded-xl transition-all shadow-md shadow-emerald-700/30 cursor-pointer active:scale-95"
@@ -136,9 +139,9 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ settings }) 
           <div className="px-3 py-2 bg-neutral-950 text-[10px] text-neutral-500 flex items-center justify-between border-t border-neutral-800/60">
             <span className="flex items-center gap-1">
               <ShieldCheck className="w-3 h-3 text-emerald-400" />
-              Canal Oficial Rocknet
+              Canal Oficial {providerName}
             </span>
-            <span className="font-mono text-neutral-400">88 9 92675749</span>
+            <span className="font-mono text-neutral-400">{settings.phoneDisplay || '88 9 92675749'}</span>
           </div>
         </div>
       )}
@@ -149,8 +152,8 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ settings }) 
         className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white flex items-center justify-center shadow-2xl shadow-[#25D366]/40 hover:shadow-[#25D366]/60 transition-all duration-300 cursor-pointer active:scale-95 focus:outline-none focus:ring-4 focus:ring-[#25D366]/30 hover:scale-105 ${
           !isOpen ? 'animate-whatsapp-pulse' : ''
         }`}
-        aria-label="Abrir WhatsApp da Rocknet"
-        title="WhatsApp Rocknet"
+        aria-label={`Abrir WhatsApp da ${providerName}`}
+        title={`WhatsApp ${providerName}`}
       >
         {isOpen ? (
           <X className="w-7 h-7 text-white stroke-[2.5]" />

@@ -4307,22 +4307,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     className="w-full bg-neutral-950 border border-neutral-800 rounded-lg p-2.5 text-white"
                   />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                  <div>
-                    <label className="text-neutral-400 block mb-1">Texto do Botão de Chamada para o WhatsApp</label>
-                    <input
-                      type="text"
-                      value={frontendContentForm.supportSection.ctaButtonText}
-                      onChange={(e) =>
-                        setFrontendContentForm({
-                          ...frontendContentForm,
-                          supportSection: { ...frontendContentForm.supportSection, ctaButtonText: e.target.value },
-                        })
-                      }
-                      className="w-full bg-neutral-950 border border-neutral-800 rounded-lg p-2.5 text-white font-semibold text-cyan-300"
-                    />
-                  </div>
-                </div>
               </div>
 
               {/* CAMPO DESTACADO NO DASHBOARD: IMAGEM DO TÉCNICO / MASCOTE NA DIV DA SEÇÃO DE SUPORTE */}
