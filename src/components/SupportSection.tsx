@@ -21,7 +21,9 @@ export const SupportSection: React.FC<SupportSectionProps> = ({ content, setting
   const card1Title = content?.card1Title || 'Atendimento Humanizado';
   const card1Desc = content?.card1Desc || 'Conversas reais pelo WhatsApp com técnicos especializados residentes em Camilos.';
   const card2Title = content?.card2Title || 'Plantão & Visita Técnica';
-  const card2Desc = content?.card2Desc || (settings?.workHours ? `Atendimento: ${settings.workHours}` : 'Atendimento de Segunda a Sábado das 07:30 às 18:00 e plantão técnico estendido até as 21:00.');
+  const defaultWorkHours = settings?.workHours || 'Segunda a Sábado das 07:30 às 18:00';
+  const defaultSupportHours = settings?.supportHours || 'Plantão técnico estendido até as 21:00';
+  const card2Desc = content?.card2Desc || (settings?.workHours ? `Atendimento: ${settings.workHours}${settings.supportHours ? ` · Plantão: ${settings.supportHours}` : ''}` : `Atendimento de ${defaultWorkHours} e ${defaultSupportHours}.`);
   const card3Title = content?.card3Title || 'Monitoramento Ativo de Rede';
   const card3Desc = content?.card3Desc || 'Nossos switches e concentradores ópticos são monitorados 24 horas para prevenir falhas.';
   const card4Title = content?.card4Title || '2ª Via & Financeiro Rápido';
@@ -147,6 +149,12 @@ export const SupportSection: React.FC<SupportSectionProps> = ({ content, setting
                 <p className="text-xs text-neutral-400 mt-1">
                   {card2Desc}
                 </p>
+                {settings?.supportHours && (
+                  <div className="mt-2.5 pt-2 border-t border-neutral-800/80 flex items-center gap-1.5 text-[11px] text-emerald-400 font-semibold">
+                    <Clock className="w-3.5 h-3.5" />
+                    <span>Plantão Estendido: {settings.supportHours}</span>
+                  </div>
+                )}
               </div>
 
               <div className="p-5 rounded-2xl bg-neutral-900/80 border border-neutral-800">

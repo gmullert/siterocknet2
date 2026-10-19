@@ -1,11 +1,12 @@
 import React from 'react';
 import { SiteTool, FrontendContent } from '../types';
-import { Gauge, MapPin, FileText, Wifi, Shield, Camera, Clock, ArrowRight, Sparkles } from 'lucide-react';
+import { ROCKNET_INFO } from '../data/content';
+import { Gauge, MapPin, FileText, Wifi, Shield, Camera, Clock, ArrowRight, Sparkles, ExternalLink } from 'lucide-react';
 
 interface SiteToolsSectionProps {
   tools: SiteTool[];
   onOpenContract: () => void;
-  phoneRaw: string;
+  phoneRaw?: string;
   content?: FrontendContent['toolsSection'];
 }
 
@@ -16,6 +17,7 @@ export const SiteToolsSection: React.FC<SiteToolsSectionProps> = ({
   content,
 }) => {
   const activeTools = tools.filter((t) => t.active);
+  const targetPhone = phoneRaw || ROCKNET_INFO.phoneRaw;
 
   const badgeText = content?.badge || 'Recursos & Serviços';
   const titleText = content?.title || 'Ferramentas & Soluções Rocknet';
@@ -47,8 +49,17 @@ export const SiteToolsSection: React.FC<SiteToolsSectionProps> = ({
         el.scrollIntoView({ behavior: 'smooth' });
       }
     } else if (tool.actionType === 'whatsapp') {
-      const url = `https://wa.me/${phoneRaw}?text=${encodeURIComponent(tool.actionTarget)}`;
+      const message = tool.actionTarget || 'Olá! Gostaria de mais informações sobre este serviço.';
+      const url = `https://wa.me/${targetPhone}?text=${encodeURIComponent(message)}`;
       window.open(url, '_blank', 'noopener,noreferrer');
+    } else if (tool.actionType === 'external') {
+      const rawTarget = tool.actionTarget ? tool.actionTarget.trim() : '';
+      if (rawTarget) {
+        const fullUrl = rawTarget.startsWith('http://') || rawTarget.startsWith('https://')
+          ? rawTarget
+          : `https://${rawTarget}`;
+        window.open(fullUrl, '_blank', 'noopener,noreferrer');
+      }
     } else if (tool.actionType === 'modal') {
       onOpenContract();
     }

@@ -1,0 +1,9 @@
+node_modules
+dist
+.git
+.gitignore
+.env
+.aistudio
+README.md
+*.log
+.DS_Store

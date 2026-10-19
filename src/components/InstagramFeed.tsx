@@ -16,6 +16,9 @@ export const InstagramFeed: React.FC<InstagramFeedProps> = ({
   content,
   posts,
 }) => {
+  const targetUrl = instagramUrl && instagramUrl.trim() ? instagramUrl.trim() : ROCKNET_INFO.instagramUrl;
+  const targetHandle = instagramHandle && instagramHandle.trim() ? instagramHandle.trim() : ROCKNET_INFO.instagramHandle;
+
   const badgeText = content?.badge || 'Comunidade Rocknet';
   const titleText = content?.title || 'Siga nosso Instagram oficial';
   const subtitleText = content?.subtitle || 'Acompanhe novidades, expansões de fibra em Camilos, sorteios e dicas técnicas diárias.';
@@ -42,13 +45,13 @@ export const InstagramFeed: React.FC<InstagramFeedProps> = ({
           </div>
 
           <a
-            href={instagramUrl}
+            href={targetUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="px-5 py-3 rounded-xl bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:from-pink-500 hover:to-indigo-500 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-purple-600/20 active:scale-95 transition-all whitespace-nowrap cursor-pointer"
           >
             <Instagram className="w-4 h-4" />
-            <span>{followBtnText} {instagramHandle}</span>
+            <span>{followBtnText} {targetHandle}</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
         </div>
@@ -58,7 +61,7 @@ export const InstagramFeed: React.FC<InstagramFeedProps> = ({
           {feedPosts.map((post) => (
             <a
               key={post.id}
-              href={instagramUrl}
+              href={targetUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="p-6 rounded-2xl bg-neutral-900/70 border border-neutral-800 hover:border-pink-500/40 hover:bg-neutral-900 transition-all group flex flex-col justify-between"
@@ -72,7 +75,7 @@ export const InstagramFeed: React.FC<InstagramFeedProps> = ({
                       </div>
                     </div>
                     <span className="font-semibold text-neutral-200">
-                      {instagramHandle ? instagramHandle.replace('@', '') : 'rocknet_camilos'}
+                      {targetHandle ? targetHandle.replace('@', '') : 'rocknet_camilos'}
                     </span>
                   </div>
                   <span className="text-[11px] text-neutral-500">{post.date}</span>

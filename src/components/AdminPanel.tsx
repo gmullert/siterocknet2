@@ -1722,22 +1722,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
                   <div>
                     <label className="text-neutral-400 block mb-1">
-                      Modo de Exibição no Topo:
+                      Status da Exibição:
                     </label>
-                    <select
-                      value={settingsForm.logoMode || 'both'}
-                      onChange={(e) => {
-                        const updated = { ...settingsForm, logoMode: e.target.value as any };
-                        setSettingsForm(updated);
-                        onUpdateSettings(updated);
-                        saveStoredSettings(updated);
-                      }}
-                      className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-2 text-xs text-white focus:border-cyan-400 focus:outline-none"
-                    >
-                      <option value="both">Imagem da Logo + Nome da Empresa</option>
-                      <option value="image">Somente a Imagem da Logomarca</option>
-                      <option value="icon">Ícone Padrão + Nome da Empresa</option>
-                    </select>
+                    <div className="p-2.5 bg-neutral-950 border border-neutral-800 rounded-xl text-neutral-300 text-xs flex items-center gap-2">
+                      <span className={`w-2 h-2 rounded-full ${settingsForm.logoUrl ? 'bg-emerald-400' : 'bg-cyan-400'}`}></span>
+                      <span>
+                        {settingsForm.logoUrl
+                          ? 'Logomarca em foto anexada (Exibição direta sem duplicidade)'
+                          : 'Tipografia Padrão Ativa (Nome estilizado)'}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1757,8 +1751,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         className="max-w-[150px] object-contain rounded"
                       />
                     ) : (
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center">
-                        <Wifi className="w-4 h-4 text-neutral-950 stroke-[2.5]" />
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center">
+                          <Wifi className="w-4 h-4 text-neutral-950 stroke-[2.5]" />
+                        </div>
+                        <span className="text-sm font-bold text-white font-display">
+                          {settingsForm.logoTextPrimary || 'Rock'}<span className="text-cyan-400">{settingsForm.logoTextAccent || 'net'}</span>
+                        </span>
                       </div>
                     )}
                   </div>
@@ -1993,6 +1992,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       type="text"
                       value={settingsForm.name}
                       onChange={(e) => setSettingsForm({ ...settingsForm, name: e.target.value })}
+                      className="w-full bg-neutral-950 border border-neutral-800 rounded-lg p-2.5 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-neutral-400 block mb-1">Slogan / Frase de Efeito (Abaixo da Logomarca)</label>
+                    <input
+                      type="text"
+                      value={settingsForm.tagline}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, tagline: e.target.value })}
+                      placeholder="Provedor de Internet Fibra Óptica"
                       className="w-full bg-neutral-950 border border-neutral-800 rounded-lg p-2.5 text-white"
                     />
                   </div>
@@ -2488,7 +2497,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="text-neutral-400 block mb-1">
+                        Badge / Etiqueta Superior
+                      </label>
+                      <input
+                        type="text"
+                        value={about.badge || ''}
+                        onChange={(e) => updateAbout({ badge: e.target.value })}
+                        placeholder="Ex: Nossa Trajetória & DNA de Inovação"
+                        className="w-full bg-neutral-950 border border-neutral-800 rounded-lg p-2.5 text-white"
+                      />
+                    </div>
+
                     <div>
                       <label className="text-neutral-400 block mb-1">
                         Título Principal da Seção
@@ -2772,7 +2794,22 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     <span>Salvar Títulos</span>
                   </button>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                  <div>
+                    <label className="text-neutral-400 block mb-1">Badge Superior</label>
+                    <input
+                      type="text"
+                      value={frontendContentForm.plansSection.badge || ''}
+                      onChange={(e) =>
+                        setFrontendContentForm({
+                          ...frontendContentForm,
+                          plansSection: { ...frontendContentForm.plansSection, badge: e.target.value },
+                        })
+                      }
+                      placeholder="Ex: Planos de Fibra Óptica"
+                      className="w-full bg-neutral-950 border border-neutral-800 rounded-lg p-2 text-white"
+                    />
+                  </div>
                   <div>
                     <label className="text-neutral-400 block mb-1">Título Principal (H2)</label>
                     <input
@@ -3622,6 +3659,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         className="w-full bg-neutral-950 border border-neutral-800 rounded-lg p-2.5 text-white"
                       >
                         <option value="whatsapp">Abrir WhatsApp com Mensagem</option>
+                        <option value="external">Abrir Link Externo / Site (URL)</option>
                         <option value="scroll">Rolar para Seção do Site (ex: #cobertura)</option>
                         <option value="modal">Abrir Modal de Contratação</option>
                       </select>
@@ -5146,33 +5184,80 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               )}
 
               <form onSubmit={handleSaveSettings} className="space-y-4 text-xs">
-                <div>
-                  <label className="text-neutral-300 block mb-1">WhatsApp Oficial para Atendimento e Pedidos *</label>
-                  <input
-                    type="text"
-                    value={settingsForm.phoneDisplay}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, phoneDisplay: e.target.value })}
-                    className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-white font-mono"
-                    placeholder="(88) 99267-5749"
-                  />
-                  <span className="text-[11px] text-neutral-500 mt-1 block">
-                    Formato exibido aos clientes no topo, botões e rodapé.
-                  </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-neutral-300 block mb-1 font-semibold">Nome Oficial do Provedor *</label>
+                    <input
+                      type="text"
+                      value={settingsForm.name}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, name: e.target.value })}
+                      className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-white font-bold"
+                      placeholder="Rocknet Telecom"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-neutral-300 block mb-1 font-semibold">Slogan / Frase de Efeito</label>
+                    <input
+                      type="text"
+                      value={settingsForm.tagline}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, tagline: e.target.value })}
+                      className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-white"
+                      placeholder="Provedor de Internet Fibra Óptica"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-neutral-300 block mb-1 font-semibold">Cidade Base / Município de Atendimento *</label>
+                    <input
+                      type="text"
+                      value={settingsForm.city}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, city: e.target.value })}
+                      className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-white"
+                      placeholder="Camilos - CE"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-neutral-300 block mb-1 font-semibold">Arroba do Instagram Oficial (@)</label>
+                    <input
+                      type="text"
+                      value={settingsForm.instagramHandle}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, instagramHandle: e.target.value })}
+                      className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-white"
+                      placeholder="@rocknet_camilos"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-neutral-300 block mb-1 font-semibold">WhatsApp Exibido aos Clientes (Formatado) *</label>
+                    <input
+                      type="text"
+                      value={settingsForm.phoneDisplay}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, phoneDisplay: e.target.value })}
+                      className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-white font-mono"
+                      placeholder="(88) 99267-5749"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-neutral-300 block mb-1 font-semibold">Número do WhatsApp Limpo (apenas dígitos) *</label>
+                    <input
+                      type="text"
+                      value={settingsForm.phoneRaw}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, phoneRaw: e.target.value.replace(/\D/g, '') })}
+                      className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-white font-mono"
+                      placeholder="5588992675749"
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <label className="text-neutral-300 block mb-1">Número do WhatsApp Limpo (apenas dígitos para wa.me) *</label>
-                  <input
-                    type="text"
-                    value={settingsForm.phoneRaw}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, phoneRaw: e.target.value.replace(/\D/g, '') })}
-                    className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-white font-mono"
-                    placeholder="5588992675749"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-neutral-300 block mb-1">Link do Instagram Oficial *</label>
+                  <label className="text-neutral-300 block mb-1 font-semibold">Link do Instagram Oficial *</label>
                   <input
                     type="text"
                     value={settingsForm.instagramUrl}
@@ -5182,15 +5267,28 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   />
                 </div>
 
-                <div>
-                  <label className="text-neutral-300 block mb-1">Horário de Atendimento e Suporte</label>
-                  <input
-                    type="text"
-                    value={settingsForm.workHours}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, workHours: e.target.value })}
-                    className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-white"
-                    placeholder="Segunda a Sábado das 07:30 às 18:00"
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-neutral-300 block mb-1 font-semibold">Horário de Atendimento Comercial</label>
+                    <input
+                      type="text"
+                      value={settingsForm.workHours}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, workHours: e.target.value })}
+                      className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-white"
+                      placeholder="Segunda a Sábado das 07:30 às 18:00"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-neutral-300 block mb-1 font-semibold">Plantão Técnico / Horário Estendido</label>
+                    <input
+                      type="text"
+                      value={settingsForm.supportHours}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, supportHours: e.target.value })}
+                      className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-white"
+                      placeholder="Plantão técnico estendido até as 21:00"
+                    />
+                  </div>
                 </div>
 
                 {/* Quick overview of due dates */}

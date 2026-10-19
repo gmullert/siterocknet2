@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plan } from '../types';
 import { ROCKNET_INFO } from '../data/content';
-import { addLeadOrder } from '../services/storage';
+import { addLeadOrder, SiteSettings } from '../services/storage';
 import { X, CheckCircle, ShieldCheck, ArrowRight, ArrowLeft, Send, Copy, Check, Clock, User, MapPin, Calendar } from 'lucide-react';
 
 interface ContractModalProps {
@@ -9,6 +9,7 @@ interface ContractModalProps {
   initialPlan?: Plan | null;
   availablePlans: Plan[];
   dueDates?: string[];
+  settings?: SiteSettings;
   onClose: () => void;
   onOrderCreated?: () => void;
   onOpenLegal?: (tab?: 'privacy' | 'terms') => void;
@@ -19,10 +20,16 @@ export const ContractModal: React.FC<ContractModalProps> = ({
   initialPlan,
   availablePlans,
   dueDates = ['05', '10', '15', '20', '25'],
+  settings,
   onClose,
   onOrderCreated,
   onOpenLegal,
 }) => {
+  const phoneRaw = settings?.phoneRaw || ROCKNET_INFO.phoneRaw;
+  const phoneDisplay = settings?.phoneDisplay || ROCKNET_INFO.phoneDisplay;
+  const city = settings?.city || ROCKNET_INFO.city || 'Camilos';
+  const providerName = settings?.name || ROCKNET_INFO.name || 'Rocknet Telecom';
+
   const [selectedPlanId, setSelectedPlanId] = useState<string>('');
   const [step, setStep] = useState<number>(1);
   const [copied, setCopied] = useState(false);
@@ -34,7 +41,7 @@ export const ContractModal: React.FC<ContractModalProps> = ({
   const [cpf, setCpf] = useState('');
   const [street, setStreet] = useState('');
   const [number, setNumber] = useState('');
-  const [neighborhood, setNeighborhood] = useState('Centro de Camilos');
+  const [neighborhood, setNeighborhood] = useState(`Centro de ${city}`);
   const [reference, setReference] = useState('');
   const [preferredPeriod, setPreferredPeriod] = useState<'manha' | 'tarde' | 'qualquer'>('manha');
   const [dueDate, setDueDate] = useState<string>(dueDates[0] || '10');
@@ -131,7 +138,7 @@ export const ContractModal: React.FC<ContractModalProps> = ({
     if (onOrderCreated) onOrderCreated();
 
     // Prepare WhatsApp text
-    const waText = `🚀 *NOVA CONTRATAÇÃO ONLINE - ROCKNET FIBRA*
+    const waText = `🚀 *NOVA CONTRATAÇÃO ONLINE - ${providerName.toUpperCase()}*
 ----------------------------------------
 📋 *Protocolo:* ${createdLead.protocol}
 📶 *Plano:* ${currentPlan.name} - ${currentPlan.speed} ${currentPlan.speedUnit} (${planPriceFull})
@@ -142,7 +149,7 @@ export const ContractModal: React.FC<ContractModalProps> = ({
 • *WhatsApp:* ${phone}
 ${cpf ? `• *CPF:* ${cpf}` : ''}
 
-📍 *Endereço de Instalação (Camilos):*
+📍 *Endereço de Instalação (${city}):*
 • *Rua/Av:* ${street}, Nº ${number}
 • *Bairro:* ${neighborhood}
 ${reference ? `• *Ponto de Ref:* ${reference}` : ''}
@@ -152,10 +159,10 @@ ${reference ? `• *Ponto de Ref:* ${reference}` : ''}
 • *Melhor Dia de Vencimento:* Dia ${dueDate}
 ${notes ? `• *Observações:* ${notes}` : ''}
 ----------------------------------------
-_Gostaria de confirmar o agendamento da instalação pelo site da Rocknet!_`;
+_Gostaria de confirmar o agendamento da instalação pelo site da ${providerName}!_`;
 
     const encoded = encodeURIComponent(waText);
-    const waUrl = `https://wa.me/${ROCKNET_INFO.phoneRaw}?text=${encoded}`;
+    const waUrl = `https://wa.me/${phoneRaw}?text=${encoded}`;
 
     // Open WhatsApp in a new tab
     window.open(waUrl, '_blank', 'noopener,noreferrer');
@@ -184,10 +191,10 @@ _Gostaria de confirmar o agendamento da instalação pelo site da Rocknet!_`;
             </div>
             <div>
               <h3 className="text-lg font-bold text-white font-display">
-                Contratação Online Express · Rocknet
+                Contratação Online Express · {providerName}
               </h3>
               <p className="text-xs text-neutral-400">
-                100% Segura · Conectada diretamente ao WhatsApp ({ROCKNET_INFO.phoneDisplay})
+                100% Segura · Conectada diretamente ao WhatsApp ({phoneDisplay})
               </p>
             </div>
           </div>

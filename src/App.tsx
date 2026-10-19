@@ -194,6 +194,7 @@ export default function App() {
             initialPlan={selectedPlanForContract}
             availablePlans={plans}
             dueDates={dueDates}
+            settings={settings}
             onClose={() => setIsContractOpen(false)}
             onOrderCreated={() => setLeads(getStoredLeads())}
             onOpenLegal={handleOpenLegal}

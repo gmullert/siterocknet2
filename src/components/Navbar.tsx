@@ -48,18 +48,26 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Zone 1: Single text element wordmark or uploaded Logo */}
           <a href="#" className="flex items-center gap-3 group text-white">
             {settings?.logoUrl ? (
-              <div className="flex items-center gap-2.5">
-                <img
-                  src={settings.logoUrl}
-                  alt={settings.name || 'Logomarca do Provedor'}
-                  style={{ height: `${settings.logoHeight || 38}px` }}
-                  className="max-w-[220px] object-contain rounded-md"
-                />
-              </div>
+              <img
+                src={settings.logoUrl}
+                alt={settings.name || 'Logomarca do Provedor'}
+                style={{ height: `${settings.logoHeight || 38}px` }}
+                className="max-w-[220px] object-contain rounded-md"
+              />
             ) : (
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform shrink-0">
                   <Wifi className="w-5 h-5 text-neutral-950 stroke-[2.5]" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xl font-extrabold tracking-tight font-display leading-tight">
+                    {logoPrimary}<span className="text-cyan-400">{logoAccent}</span>
+                  </span>
+                  {settings?.tagline && (
+                    <span className="text-[10px] text-neutral-400 font-medium tracking-tight">
+                      {settings.tagline}
+                    </span>
+                  )}
                 </div>
               </div>
             )}

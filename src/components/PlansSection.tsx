@@ -42,6 +42,11 @@ export const PlansSection: React.FC<PlansSectionProps> = ({ plans, onSelectPlan,
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
+          {content?.badge && (
+            <div className="text-xs font-semibold text-cyan-400 tracking-wider uppercase mb-1.5">
+              {content.badge}
+            </div>
+          )}
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight font-display text-balance">
             {titleText}
           </h2>

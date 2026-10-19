@@ -269,7 +269,7 @@ export const getStoredSettings = (): SiteSettings => {
     supportHours: ROCKNET_INFO.supportHours,
     logoUrl: '',
     logoHeight: 38,
-    logoMode: 'both',
+    logoMode: 'image',
     logoTextPrimary: 'Rock',
     logoTextAccent: 'net',
     faviconUrl: '',

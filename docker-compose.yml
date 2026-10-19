@@ -1,0 +1,23 @@
+services:
+  rocknet-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rocknet-telecom
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    volumes:
+      - rocknet_uploads:/app/public
+    networks:
+      - rocknet-network
+
+volumes:
+  rocknet_uploads:
+
+networks:
+  rocknet-network:
+    driver: bridge

@@ -26,6 +26,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
     return null;
   }
 
+  const badge = content?.badge || 'Nossa Trajetória & DNA de Inovação';
   const title = content?.title || 'A Rocknet Telecom';
   const subtitle = content?.subtitle || 'Muito mais que um provedor de internet: uma infraestrutura de fibra óptica de última geração conectando pessoas, famílias e empresas ao futuro.';
   
@@ -80,7 +81,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           <div className="lg:col-span-7 space-y-5 text-neutral-300 text-sm sm:text-base leading-relaxed">
             <div className="flex items-center gap-2 text-cyan-400 font-bold text-xs uppercase tracking-widest mb-1">
               <Sparkles className="w-4 h-4" />
-              <span>Nossa Trajetória & DNA de Inovação</span>
+              <span>{badge}</span>
             </div>
 
             <p className="text-white text-base sm:text-lg font-medium leading-relaxed text-center">
