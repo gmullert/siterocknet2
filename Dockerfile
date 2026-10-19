@@ -7,7 +7,7 @@ RUN apk add --no-cache libc6-compat
 
 # Copia arquivos de dependência e instala
 COPY package.json ./
-RUN npm install
+RUN npm install -g npm@latest && npm install --legacy-peer-deps
 
 # Copia todo o código-fonte da aplicação
 COPY . .
